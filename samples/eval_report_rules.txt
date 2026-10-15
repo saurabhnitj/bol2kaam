@@ -1,0 +1,34 @@
+case                       res   state                    conf  notes
+basic_hinglish             PASS  READY_FOR_CONFIRMATION   1.00  
+english_two_sales          PASS  READY_FOR_CONFIRMATION   1.00  
+payment_failed_deducted    PASS  ESCALATED                1.00  
+otp_shared                 PASS  ESCALATED                1.00  
+pii_heavy                  PASS  READY_FOR_CONFIRMATION   1.00  
+aadhaar_pan                PASS  READY_FOR_CONFIRMATION   1.00  
+failure_missing_amount     PASS  NEEDS_CLARIFICATION      0.00  
+failure_gibberish          PASS  NEEDS_CLARIFICATION      0.00  
+high_value                 PASS  ESCALATED                1.00  
+reminder_no_time           PASS  NEEDS_CLARIFICATION      0.85  
+settled                    PASS  READY_FOR_CONFIRMATION   1.00  
+payable_supplier           PASS  READY_FOR_CONFIRMATION   1.00  
+weekday                    PASS  READY_FOR_CONFIRMATION   1.00  
+two_recharge_sales         PASS  READY_FOR_CONFIRMATION   1.00  
+network_down               PASS  READY_FOR_CONFIRMATION   1.00  
+refund_complaint           PASS  READY_FOR_CONFIRMATION   1.00  
+fraud_fake_note            PASS  ESCALATED                1.00  
+long_voice_note            PASS  READY_FOR_CONFIRMATION   1.00  
+english_settle_and_due     PASS  READY_FOR_CONFIRMATION   1.00  
+decimal_and_k              PASS  READY_FOR_CONFIRMATION   1.00  
+stress_unit_price          PASS  READY_FOR_CONFIRMATION   1.00  
+stress_diye_unknown_verb   PASS  NEEDS_CLARIFICATION      0.00  
+stress_out_of_scope_loan   PASS  NEEDS_CLARIFICATION      0.00  
+stress_theft_no_numbers    PASS  ESCALATED                1.00  
+
+--- summary (llm=none) ---
+cases passed        : 24/24 (100%)
+PII leaks           : 0  (target 0)
+escalation recall   : 5/5 ; false escalations: 0
+engines used        : {'rules': 24}
+latency ms          : mean 1.00, p95 1.21
+est. tokens / cost  : 0 tokens, Rs 0.0000 (local rules = Rs 0)
+audit chain         : OK (120 records)

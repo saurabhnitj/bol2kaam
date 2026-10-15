@@ -1,0 +1,102 @@
+
+##############################################################################
+# 1. HAPPY PATH - Hinglish voice-note transcript -> structured action (offline, rules engine)
+##############################################################################
+INPUT: Aaj subah 10 packet chai becha 450 me, 5 packet namkeen becha 250 me. Kiraya 3000 diya. Anil ko 600 ka udhaar diya, parso wapas lena hai.
+
+=== N0001  [READY_FOR_CONFIRMATION]  confidence=1.00  engine=rules ===
+Privacy: redacted locally -> NAME x1
+Samjha hua text : Aaj subah 10 packet chai becha 450 me, 5 packet namkeen becha 250 me. Kiraya 3000 diya. C1 ko 600 ka udhaar diya, parso wapas lena hai.
+Bikri: Rs 700 | Kharcha: Rs 3000 | Baaki (milna): Rs 600 | Dena: Rs 0 | Mila: Rs 0
+  Yaad dilao: 2026-10-12   parso wapas lena hai
+Next: confirm karein (human approval)
+-> user confirmed; reminder task created (nothing is scheduled before human approval)
+
+##############################################################################
+# 2. PRIVACY - phone, UPI, PAN and an OTP in the note; PII never leaves the device
+##############################################################################
+INPUT: Sunita didi ka number 9876543210, UPI sunita@okaxis. Customer ne OTP 482913 maanga aur maine bata diya.
+
+=== N0002  [ESCALATED]  confidence=1.00  engine=rules ===
+Privacy: redacted locally -> SECRET x1, UPI x1, PHONE x1, NAME x1
+Samjha hua text : C2 didi ka number [PHONE], UPI [UPI]. Customer ne [SECRET] maanga aur maine bata diya.
+Bikri: Rs 0 | Kharcha: Rs 0 | Baaki (milna): Rs 0 | Dena: Rs 0 | Mila: Rs 0
+  Samasya [HIGH] SECRET_SHARED: Customer ne [SECRET] maanga
+  ESCALATE (stop) -> Eko risk team: OTP/PIN share ho gaya hai. Abhi PIN badlein aur kisi ko na batayein.
+Next: human supervisor ke paas gaya (resolve)
+
+##############################################################################
+# 3. INTENTIONAL FAILURE A - incomplete input: worker refuses to guess, asks, then recovers
+##############################################################################
+
+=== N0003  [NEEDS_CLARIFICATION]  confidence=0.00  engine=rules ===
+Samjha hua text : Aaj kuch maal becha.
+Bikri: Rs 0 | Kharcha: Rs 0 | Baaki (milna): Rs 0 | Dena: Rs 0 | Mila: Rs 0
+  SAWAAL: Kitne ka becha? (amount batayein)
+Next: upar ke sawaal ka jawab dein (answer)
+
+(user answers the question)
+
+=== N0003  [READY_FOR_CONFIRMATION]  confidence=1.00  engine=rules ===
+Samjha hua text : Aaj kuch maal becha Aaj 5 packet biscuit 250 rupees me becha.
+Bikri: Rs 250 | Kharcha: Rs 0 | Baaki (milna): Rs 0 | Dena: Rs 0 | Mila: Rs 0
+Next: confirm karein (human approval)
+
+##############################################################################
+# 4. INTENTIONAL FAILURE B - local LLM returns malformed JSON: reject + fall back to rules
+##############################################################################
+
+=== N0004  [READY_FOR_CONFIRMATION]  confidence=1.00  engine=rules-fallback ===
+Samjha hua text : 3 kg rice 180 rupees me becha.
+Bikri: Rs 180 | Kharcha: Rs 0 | Baaki (milna): Rs 0 | Dena: Rs 0 | Mila: Rs 0
+Next: confirm karein (human approval)
+(audit shows: llm_rejected x2 -> llm_fallback_to_rules; the user still gets a correct answer)
+
+##############################################################################
+# 5. INTENTIONAL FAILURE C - LLM hallucinates an amount: grounding check rejects it
+##############################################################################
+
+=== N0005  [READY_FOR_CONFIRMATION]  confidence=1.00  engine=rules-fallback ===
+Samjha hua text : 3 kg rice 180 rupees me becha.
+Bikri: Rs 180 | Kharcha: Rs 0 | Baaki (milna): Rs 0 | Dena: Rs 0 | Mila: Rs 0
+Next: confirm karein (human approval)
+
+##############################################################################
+# 6. INTENTIONAL FAILURE D - voice input but no offline speech-to-text installed
+##############################################################################
+
+=== N0006  [NEEDS_CLARIFICATION]  confidence=0.00  engine=none ===
+Samjha hua text : 
+  SAWAAL: Awaaz samajh nahi aayi / offline speech-to-text nahi hai. Kripya note type karke bhejein.
+Next: upar ke sawaal ka jawab dein (answer)
+
+##############################################################################
+# 7. ESCALATION - money deducted + payment failed: worker STOPS and routes to a human
+##############################################################################
+
+=== N0007  [ESCALATED]  confidence=1.00  engine=rules ===
+Samjha hua text : Paytm se payment fail ho gaya, customer ke paise kat gaye.
+Bikri: Rs 0 | Kharcha: Rs 0 | Baaki (milna): Rs 0 | Dena: Rs 0 | Mila: Rs 0
+  Samasya [MEDIUM] TXN_FAILED: Paytm se payment fail ho gaya
+  Samasya [HIGH] MONEY_DEDUCTED: customer ke paise kat gaye
+  ESCALATE (inform) -> Field supervisor: TXN_FAILED - nazar rakhein
+  ESCALATE (stop) -> Eko payments support: Paise kat gaye - transaction check karwana hai.
+Next: human supervisor ke paas gaya (resolve)
+
+##############################################################################
+# 8. AGGREGATE FOR EKO - needs consent; small counts suppressed; no names, no free text
+##############################################################################
+REFUSED without consent: consent required: nothing is shared without --consent
+{
+ "schema": "bol2kaam.aggregate.v1",
+ "period_end": "2026-10-10",
+ "notes_confirmed": 4,
+ "sales_total_rounded_500": 2500,
+ "expenses_total_rounded_500": 5500,
+ "exception_counts": {}
+}
+
+##############################################################################
+# 9. AUDIT - tamper-evident hash chain
+##############################################################################
+chain OK: True | records: 64

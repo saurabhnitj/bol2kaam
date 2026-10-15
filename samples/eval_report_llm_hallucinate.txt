@@ -1,0 +1,9 @@
+
+--- summary (llm=fake-hallucinate) ---
+cases passed        : 24/24 (100%)
+PII leaks           : 0  (target 0)
+escalation recall   : 5/5 ; false escalations: 0
+engines used        : {'rules-fallback': 24}
+latency ms          : mean 1.35, p95 1.78
+est. tokens / cost  : 0 tokens, Rs 0.0000 (local rules = Rs 0)
+audit chain         : OK (192 records)

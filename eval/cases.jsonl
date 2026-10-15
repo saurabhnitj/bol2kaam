@@ -1,0 +1,24 @@
+{"id":"basic_hinglish","text":"Aaj 5 packet biscuit 250 rupees me becha. Ramesh ko 500 ka udhaar diya. Kal Ramesh se paisa lena hai.","expect":{"state":"READY_FOR_CONFIRMATION","sales_total":250,"receivable_total":500,"n_reminders":1,"reminder_when":["2026-10-11"]},"no_leak":["Ramesh"]}
+{"id":"english_two_sales","text":"Sold 3 kg rice for Rs 180 and 2 kg sugar for Rs 90. Spent Rs 400 on stock.","expect":{"state":"READY_FOR_CONFIRMATION","sales_total":270,"expenses_total":400}}
+{"id":"payment_failed_deducted","text":"Aaj bijli ka bill 1200 bhara. Paytm se payment fail ho gaya, customer ke paise kat gaye.","expect":{"state":"ESCALATED","expenses_total":1200,"exceptions":["TXN_FAILED","MONEY_DEDUCTED"]}}
+{"id":"otp_shared","text":"Customer ne bola OTP 482913 bata do, maine bata diya.","expect":{"state":"ESCALATED","exceptions":["SECRET_SHARED"]},"no_leak":["482913"]}
+{"id":"pii_heavy","text":"Sunita didi ka number 9876543210 hai, unka UPI sunita@okaxis hai. 700 ka udhaar baaki hai.","expect":{"state":"READY_FOR_CONFIRMATION","receivable_total":700},"no_leak":["9876543210","sunita","okaxis"]}
+{"id":"aadhaar_pan","text":"Mohan ne Aadhaar 2345 6789 0123 aur PAN ABCDE1234F diya. 1500 ka maal becha.","expect":{"sales_total":1500},"no_leak":["2345 6789 0123","ABCDE1234F","Mohan"]}
+{"id":"failure_missing_amount","text":"Aaj kuch maal becha.","expect":{"state":"NEEDS_CLARIFICATION","min_questions":1}}
+{"id":"failure_gibberish","text":"hmm... achha","expect":{"state":"NEEDS_CLARIFICATION","confidence_max":0.0}}
+{"id":"high_value","text":"Aaj 75000 ka maal becha.","expect":{"state":"ESCALATED","sales_total":75000}}
+{"id":"reminder_no_time","text":"Yaad dilana Mohan ko call karna hai.","expect":{"state":"NEEDS_CLARIFICATION","min_questions":1}}
+{"id":"settled","text":"Geeta ne 300 ka udhaar chuka diya.","expect":{"state":"READY_FOR_CONFIRMATION","settled_total":300,"receivable_total":0}}
+{"id":"payable_supplier","text":"Wholesaler ko 2000 dena hai parso tak.","expect":{"state":"READY_FOR_CONFIRMATION","payable_total":2000,"n_reminders":1,"reminder_when":["2026-10-12"]}}
+{"id":"weekday","text":"Monday ko Rajesh se milna hai stock ke baare me.","expect":{"state":"READY_FOR_CONFIRMATION","n_reminders":1,"reminder_when":["2026-10-12"]},"no_leak":["Rajesh"]}
+{"id":"two_recharge_sales","text":"3 recharge becha 100 rs ka, 2 sim becha 200 rs me","expect":{"state":"READY_FOR_CONFIRMATION","sales_total":300}}
+{"id":"network_down","text":"Aaj network nahi tha, app band raha, koi sale nahi hui.","expect":{"state":"READY_FOR_CONFIRMATION","exceptions":["TECH_ISSUE"],"sales_total":0}}
+{"id":"refund_complaint","text":"Customer ne shikayat ki ki refund chahiye 450 ka.","expect":{"state":"READY_FOR_CONFIRMATION","exceptions":["COMPLAINT","REFUND_REQUEST"],"has_inform_escalation":true}}
+{"id":"fraud_fake_note","text":"Ek aadmi ne dhokha diya, fake note de gaya 500 ka.","expect":{"state":"ESCALATED","exceptions":["FRAUD"]}}
+{"id":"long_voice_note","text":"Aaj subah 10 packet chai becha 450 me, 5 packet namkeen becha 250 me. Kiraya 3000 diya. Anil ko 600 ka udhaar diya, parso wapas lena hai. Ek customer ka UPI payment atak gaya.","expect":{"state":"READY_FOR_CONFIRMATION","sales_total":700,"expenses_total":3000,"receivable_total":600,"n_reminders":1,"reminder_when":["2026-10-12"],"exceptions":["TXN_FAILED"]},"no_leak":["Anil"]}
+{"id":"english_settle_and_due","text":"Priya paid 1,500 of her due. Call Dev tomorrow about due 2k.","expect":{"state":"READY_FOR_CONFIRMATION","settled_total":1500,"receivable_total":2000,"n_reminders":1,"reminder_when":["2026-10-11"]},"no_leak":["Priya","Dev "]}
+{"id":"decimal_and_k","text":"Sold 1.5 kg tea for Rs 600. Bought stock worth 5k.","expect":{"sales_total":600,"expenses_total":5000}}
+{"id":"stress_unit_price","text":"Sold 10 bottles water at 20 each","expect":{"state":"READY_FOR_CONFIRMATION","sales_total":200}}
+{"id":"stress_diye_unknown_verb","text":"ramesh ne 200 diye aur sita ne 150 diye","expect":{"state":"NEEDS_CLARIFICATION","min_questions":1},"no_leak":["ramesh","sita"]}
+{"id":"stress_out_of_scope_loan","text":"customer ko 1 lakh ka loan chahiye","expect":{"state":"NEEDS_CLARIFICATION","min_questions":1}}
+{"id":"stress_theft_no_numbers","text":"ek ladka paise lekar bhag gaya police ko bataya","expect":{"state":"ESCALATED","exceptions":["SAFETY"]}}
